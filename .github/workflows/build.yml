@@ -31,23 +31,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Geode downloads the newest GD bindings by default; pin a known-good version so
+      # upstream changes can't break our builds (bump BINDINGS_COMMIT to update).
+      - name: Use pinned GD bindings
+        shell: bash
+        env:
+          BINDINGS_COMMIT: 0b1cd55
+        run: |
+          git clone -q --filter=blob:none https://github.com/geode-sdk/bindings "$RUNNER_TEMP/bindings"
+          git -C "$RUNNER_TEMP/bindings" checkout -q "$BINDINGS_COMMIT"
+          echo "GEODE_BINDINGS_REPO_PATH=$RUNNER_TEMP/bindings" >> "$GITHUB_ENV"
+
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
           target: ${{ matrix.config.target }}
-
-      - name: Report build errors (temporary)
-        if: failure() && matrix.config.target == 'Android64'
-        shell: bash
-        run: |
-          NDK=$(ls -d /usr/local/lib/android/sdk/ndk/* | sort -V | tail -1)
-          rm -rf dbg
-          { cmake -B dbg -G Ninja -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_TOOLCHAIN_FILE=$NDK/build/cmake/android.toolchain.cmake -DANDROID_STL=c++_shared \
-              -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-23 -DGEODE_DONT_INSTALL_MODS=ON \
-              -DGEODE_TARGET_PLATFORM=Android64 && cmake --build dbg; } > dbg.log 2>&1 || true
-          grep -iE "error|undefined" dbg.log | sort -u | head -30 | sed 's/^/::error::/'
 
   package:
     name: Package builds
