@@ -1,22 +1,32 @@
 {
-	"geode": "6.0.0-alpha.1",
+	"geode": "6.0.0",
 	"gd": {
 		"win": "2.2091",
 		"android": "2.2091"
 	},
 	"id": "pester.mg-menu",
 	"name": "MG Menu",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "Pester",
 	"description": "A hack menu for PC and mobile: noclip, speedhack, show hitboxes, unlock icons and more, with Safe Mode so cheated runs never save.",
-	"tags": ["cheat", "gameplay", "utility"],
+	"tags": [
+		"cheat",
+		"gameplay",
+		"utility"
+	],
 	"settings": {
 		"open-key": {
 			"type": "string",
 			"name": "PC Shortcut",
 			"description": "Key that opens the menu on PC.",
 			"default": "Tab",
-			"one-of": ["Tab", "F1", "F2", "Insert", "Right Shift"]
+			"one-of": [
+				"Tab",
+				"F1",
+				"F2",
+				"Insert",
+				"Right Shift"
+			]
 		},
 		"check-updates": {
 			"type": "bool",
